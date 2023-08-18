@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "../style.css";
 import {
   createBall,
@@ -26,9 +25,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
-const orbitControls = new OrbitControls(camera, renderer.domElement);
 camera.position.set(0, 2, 10);
-orbitControls.update();
 
 const pointLight = new THREE.DirectionalLight("#ffffff", 5);
 pointLight.position.set(0, 5, 3);
@@ -66,7 +63,7 @@ const {
   plankCannonMat: plankOneCannonMat,
 } = createPlank();
 scene.add(plankOneMesh);
-plankOneCannonBody.position.copy(new CANNON.Vec3(-5, 4, -2));
+plankOneCannonBody.position.copy(new CANNON.Vec3(-5, 6, -2));
 plankOneCannonBody.quaternion.setFromEuler(-Math.PI / 2.1, 0.5, 0);
 world.addBody(plankOneCannonBody);
 
@@ -76,24 +73,25 @@ const {
   plankCannonMat: plankTwoCannonMat,
 } = createPlank();
 scene.add(plankTwoMesh);
-plankTwoCannonBody.position.copy(new CANNON.Vec3(5, 4, -2));
+plankTwoCannonBody.position.copy(new CANNON.Vec3(5, 6, -2));
 plankTwoCannonBody.quaternion.setFromEuler(-Math.PI / 2, -0.5, 0);
 world.addBody(plankTwoCannonBody);
 
 const { ballMesh, ballCannonBody, ballCannonMat } = createBall();
 scene.add(ballMesh);
-ballCannonBody.position.copy(new CANNON.Vec3(1, 1, -1));
+ballCannonBody.position.copy(new CANNON.Vec3(0, 2, -1));
 world.addBody(ballCannonBody);
 
-const { textMesh } = await loadAndCreateText({
+loadAndCreateText({
   color: primaryDarkYellow,
   text: `Don't click here, It might hurt TIMMY`,
+}).then(({ textMesh }) => {
+  const textBoundingBox = new THREE.Box3().setFromObject(textMesh);
+  const textSize = new THREE.Vector3();
+  textBoundingBox.getSize(textSize);
+  textMesh.position.set(-textSize.x / 2, 8, 0);
+  scene.add(textMesh);
 });
-const textBoundingBox = new THREE.Box3().setFromObject(textMesh);
-const textSize = new THREE.Vector3();
-textBoundingBox.getSize(textSize);
-textMesh.position.set(-textSize.x / 2, 6, 0);
-scene.add(textMesh);
 
 let currentAction;
 const { timmy, animations, mixer, TIMMY_ANIMATIONS } = await loadTimmy();
@@ -105,7 +103,7 @@ const timmyCollideActions = [
   TIMMY_ANIMATIONS.dance,
 ];
 timmy.scale.set(0.02, 0.02, 0.02);
-timmy.position.set(9, -7, 1);
+timmy.position.set(9, -5, 0);
 timmy.rotation.y = -1.5;
 scene.add(timmy);
 animations[TIMMY_ANIMATIONS.walk].play();
