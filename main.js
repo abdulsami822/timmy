@@ -2,8 +2,6 @@ import * as THREE from "three";
 import { createSun } from "./modules/sun";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-import "./style.css";
-
 const scene = new THREE.Scene();
 // const axesHelpers = new THREE.AxesHelper(3);
 // scene.add(axesHelpers);

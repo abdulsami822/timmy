@@ -146,11 +146,11 @@ const loadTimmyAnimations = async ({ loader, mixer }) => {
   return animations;
 };
 
-export const loadTimmy = async () => {
+export const loadTimmy = async ({ loadingManager }) => {
   let timmy;
   let mixer;
 
-  const fbxLoader = new FBXLoader();
+  const fbxLoader = new FBXLoader(loadingManager);
   fbxLoader.setPath("/assets/characters/timmy/");
   timmy = await loadFbx({
     loader: fbxLoader,
